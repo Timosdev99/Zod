@@ -126,39 +126,10 @@ abstract class ZodType<T> {
     }
   }
   
-//usage
-  const myStringSchema = new ZodString().min(5).max(10).regex(/^[a-z]+$/);
-  
 
-  try {
-    const validString = myStringSchema.parse("hello");
-    console.log("Valid string:", validString);
-  } catch (error) {
-    console.error("Validation error:", error);
-  }
-  
-  
-  const myNumberSchema = new ZodNumber().min(0);
-  
-  
-  try {
-    const validNumber = myNumberSchema.parse(42);
-    console.log("Valid number:", validNumber);
-  } catch (error) {
-    console.error("Validation error:", error);
-  }
-  
- 
-  const myObjectSchema = new ZodObject({
-    username: new ZodString().min(3),
-    age: new ZodNumber().min(18)
-  });
-  
+export const zod  = {
+    string:  ZodString,
+    number:  ZodNumber,
+    object: ZodObject
+}
 
-  try {
-    const validObject = myObjectSchema.parse({ username: "joe", age: 25 });
-    console.log("Valid object:", validObject);
-  } catch (error) {
-    console.error("Validation error:", error);
-  }
-  
