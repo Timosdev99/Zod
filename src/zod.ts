@@ -52,6 +52,7 @@ abstract class ZodType<T> {
       }
       return data;
     }
+
   }
   
   
@@ -126,10 +127,46 @@ abstract class ZodType<T> {
     }
   }
   
+  class zodArray<T> extends ZodType<T[]> {
+    private itemSchema: ZodType<T>;
+    private minItems?: number;
+    private maxItems?: number;
+
+    constructor(itemSchema: ZodType<T>){
+        super()
+        this.itemSchema = itemSchema;
+    }
+
+    min(n: number): this {
+        this.minItems = n;
+        return this;
+      }
+    
+     
+      max(n: number): this {
+        this.maxItems = n;
+        return this;
+      }
+
+      parse(data: unknown): T[] {
+        if (!Array.isArray(data)) {
+          throw new Error('Expected an array');
+        }
+        if (this.minItems !== undefined && data.length < this.minItems) {
+          throw new Error(`Array must have at least ${this.minItems} items`);
+        }
+        if (this.maxItems !== undefined && data.length > this.maxItems) {
+          throw new Error(`Array must have no more than ${this.maxItems} items`);
+        }
+        return data.map((item) => this.itemSchema.parse(item));
+      }
+    
+  }
 
 export const zod  = {
     string:  ZodString,
     number:  ZodNumber,
-    object: ZodObject
+    object: ZodObject,
+    array: zodArray
 }
 
